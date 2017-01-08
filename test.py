@@ -1,6 +1,6 @@
 
 from slides import Slide
-a_text = '''some text with **ordinary** _markup_
+a_text = '''some text with *ordinary* _markup_
 spanning multiple lines spanning multiple lines spanning multiple lines spanning multiple lines spanning multiple lines spanning multiple 
 
 and with paragraphs'''

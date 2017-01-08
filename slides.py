@@ -25,6 +25,7 @@ Following the invocation of the last command, the REPL will clear the
 screen and print out the formatted text inside an ascii box.
 """
 
+
 class Slide(object):
     """The `Slide` class works in a REPL, by first clearing the terminal,
     then printing the next slide object text formatted in a box.
@@ -61,14 +62,38 @@ class Slide(object):
         """
         ... text for slide goes here
         """
+        self.patterns = {'*': '\33[1m',
+                         '_': '\33[4m',
+                         'END': '\33[0m'}
         self.heading = heading
-        self.text = text.split('\n')
-        self.formatted = self.text#self._format_text()
-        self.ready_text = self._draw_box()
+        self.text = text
+        self.formatted = self._format_text(text)
+        self.slide_text = self._draw_box()
 
+    def _format_text(self, text):
+        """
+        takes the text as input and converts
+        *text* to ascii bold text
+        /text/ to ascii italic text
+        _text_ to ascii underlined text
 
-    def _format_text(self):
-        pass
+        returns the formatted text string
+        """
+        ret_text = []
+        in_it = False
+        for c in text:
+            if c in self.patterns:
+                if in_it:
+                    c = self.patterns.get('END')
+                    in_it = False
+                else:
+                    in_it = True
+                    c = self.patterns.get(c)
+            ret_text.append(self.patterns.get(c, c))
+            
+        ret_text = (''.join(ret_text)).split('\n')
+
+        return ret_text
 
     def _split_line(self, line, width):
         return [line[i:i+width] for i in range(0, len(line), width)]
@@ -76,19 +101,19 @@ class Slide(object):
 
     def _split_msg(self, msg, width):
         lines = msg
-        split_lines = [self._split_line(line, width-2 ) for line in lines]
+        split_lines = [self._split_line(line, width-2) for line in lines]
         return [item for sublist in split_lines for item in sublist]
 
 
     def _draw_box(self, max_width=80):
-        count = len(max(self.text, key=len)) + 2
+        count = len(max(self.text.split('\n'), key=len)) + 2
 
         if count > max_width:
             count = max_width
 
         tb = "+" + "-" * count + "+"
 
-        hdr = "\n| {0} |\n|{1}|".format(self.heading.ljust(count-2), "".ljust(count))
+        hdr = "\n| \33[7m{0}\33[0m |\n|{1}|".format(self.heading.ljust(count-2), "".ljust(count))
         msg = "\n".join("| " + x.ljust(count-2) + " |" for x in self._split_msg(self.formatted, count))
 
         return "{0}{1}\n{2}\n{0}".format(tb, hdr, msg)
@@ -100,4 +125,4 @@ class Slide(object):
         formatting out goes here
         """
         os.system('clear');
-        return self.ready_text
+        return self.slide_text
