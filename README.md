@@ -32,3 +32,48 @@ Which will clear the terminal and print
 
 In [2]: 
 ```
+
+Alternatively, you can also have multiple slides **saved** in variables which then can
+be called from the Python interactive in a presentation mode, like David did. 
+For example, have below code snippet saved in a file, say test1.py.
+
+```python
+from slides import Slide
+
+text1 = '''some text111111111111 with *ordinary* _markup_
+spanning multiple lines spanning multiple lines spanning multiple lines spanning multiple lines spanning multiple lines spanning multiple 
+
+and with paragraphs'''
+slide1 = Slide('A header', text1)
+
+text2 = '''some text2222222222222 with *ordinary* _markup_
+spanning multiple lines spanning multiple lines spanning multiple lines spanning multiple lines spanning multiple lines spanning multiple 
+
+and with paragraphs'''
+slide2 = Slide('A header', text2)
+
+```
+
+In Python interactive shell, enter
+```python
+>>> from test1 import *
+```
+
+Then enter,
+```python
+>>> slide1
+```
+
+You will find slide1 displayed.
+
+
+Then enter,
+```python
+>>> slide2
+```
+
+You will find slide2 displayed.
+
+
+
+
